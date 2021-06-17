@@ -1,10 +1,16 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'locationtracker',
+  appId: 'com.tracking.app',
+  appName: 'locationtraking',
   webDir: 'www',
-  bundledWebRuntime: false
+  bundledWebRuntime: false,
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {}
 };
 
 export default config;
