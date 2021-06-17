@@ -1,0 +1,12 @@
+{
+	"appId": "com.tracking.app",
+	"appName": "locationtraking",
+	"webDir": "www",
+	"bundledWebRuntime": false,
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 0
+		}
+	},
+	"cordova": {}
+}
