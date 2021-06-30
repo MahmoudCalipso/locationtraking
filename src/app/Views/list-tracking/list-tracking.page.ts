@@ -18,9 +18,12 @@ export class ListTrackingPage implements OnInit {
               private router: Router) { }
 
   ngOnInit() {
-    this.UserId = Storage.get({key: 'USER_ID'});
+    this.UserId = Storage.get({ key: 'USER_ID' });
+    if (this.UserId == null) {
+      this.router.navigate(['sign-in']);
+    }
     this.getAllTrackingForDriver(this.UserId);
-    this.getTrackSelected(this.UserId, this.locid);
+   // this.getTrackSelected(this.UserId, this.locid);
   }
 
 

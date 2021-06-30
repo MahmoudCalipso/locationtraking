@@ -1,6 +1,7 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Sign In</ion-title>
+  <ion-toolbar>  
+    
+    <ion-title>{{currentPageTitle}}</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
@@ -10,14 +11,15 @@
   </ion-card>
     <ion-item>
       <ion-label position="floating">Email</ion-label>
-      <ion-input></ion-input>
+      <ion-input class="btn-style"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Password</ion-label>
-      <ion-input></ion-input>
+      <ion-input class="btn-style"></ion-input>
     </ion-item>
     <ion-item style="padding-top: 10%;"> 
-    <input style="width: 100%;" type="submit" class="btn btn-outline-success" value="Submit"/>  
+      <ion-button type="submit" size="large" color="success" expand="block" > Connect</ion-button>
+    
     </ion-item>
   </form> 
 </ion-content>

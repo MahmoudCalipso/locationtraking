@@ -14,8 +14,8 @@ export class HomePage implements OnInit {
               private router: Router) {
   }
   ngOnInit() {
-    if (Storage.get({ key: 'TOKEN_KEY'}) == null && !this.authService.isAuthenticated ) {
-      this.router.navigate(['/sign-in']);
+    if (Storage.get({ key: 'TOKEN_KEY'}) == null  ) {
+      this.router.navigate(['sign-in']);
     }
 
   }

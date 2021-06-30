@@ -18,7 +18,7 @@ export class SignInPage implements OnInit {
     private authService: AuthenticationService,
     private alertController: AlertController,
     private router: Router,
-    private loadingController: LoadingController
+    
   ) {}
 
   ngOnInit() {
@@ -29,25 +29,17 @@ export class SignInPage implements OnInit {
   }
 
   async login() {
-    const loading = await this.loadingController.create();
-    await loading.present();
-
-    (await this.authService.login(this.credentials.value)).subscribe(
-      async (res) => {
-        await loading.dismiss();
-        this.router.navigateByUrl('/home', { replaceUrl: true });
-      },
-      async (res) => {
-        await loading.dismiss();
-        const alert = await this.alertController.create({
-          header: 'Login failed',
-          message: res.error.error,
-          buttons: ['OK'],
-        });
-
-        await alert.present();
-      }
-    );
+    var res = this.authService.login(this.credentials.value);
+    if (res) {
+      this.router.navigate(['home']);
+    } else {
+      const alert = await this.alertController.create({
+        header: 'Login failed',
+        message: "Your Informations is not correct",
+        buttons: ['OK'],
+      });
+      this.router.navigate(['sign-in']);
+    }
   }
 
   // Easy access for form fields

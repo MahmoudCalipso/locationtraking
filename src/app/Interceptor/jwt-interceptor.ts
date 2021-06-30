@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError, BehaviorSubject, of } from 'rxjs';
+import { Observable, throwError, BehaviorSubject, of, pipe } from 'rxjs';
 import { AuthenticationService } from '../services/authentication.service';
 import {
   catchError,
@@ -70,7 +70,7 @@ export class JwtInterceptor implements HttpInterceptor {
     }
   }
 
-  private async handle400Error(err) {
+  private async handle400Error(_err) {
     // Potentially check the exact error reason for the 400
     // then log out the user automatically
     const toast = await this.toastCtrl.create({
@@ -85,46 +85,45 @@ export class JwtInterceptor implements HttpInterceptor {
 
   // Indicates our access token is invalid, try to load a new one
   private handle401Error(request: HttpRequest < any >, next: HttpHandler): Observable < any > {
-    // Check if another call is already using the refresh logic
+    //Check if another call is already using the refresh logic
     if (!this.isRefreshingToken) {
-      // Set to null so other requests will wait
-      // until we got a new token!
+     // Set to null so other requests will wait
+   //   until we got a new token!
       this.tokenSubject.next(null);
       this.isRefreshingToken = true;
       this.apiService.currentAccessToken = null;
 
-      // First, get a new access token
+     // First, get a new access token
       return this.apiService.getNewAccessToken().pipe(
         switchMap((token: any) => {
           if (token) {
-            // Store the new token
+            //Store the new token
             const accessToken = token.accessToken;
             return this.apiService.storeAccessToken(accessToken).then(
-              switchMap(_ => {
+               pipe(_ =>{
                 // Use the subject so other calls can continue with the new token
                 this.tokenSubject.next(accessToken);
-
-                // Perform the initial request again with the new token
-                return next.handle(this.addToken(request));
-              })
+                //  Perform the initial request again with the new token
+                 next.handle(this.addToken(request));
+                })
             );
           } else {
-            // No new token or other problem occurred
+           // No new token or other problem occurred
             return of(null);
           }
         }),
         finalize(() => {
-          // Unblock the token reload logic when everything is done
+         // Unblock the token reload logic when everything is done
           this.isRefreshingToken = false;
         })
       );
     } else {
-      // "Queue" other calls while we load a new token
+      //"Queue" other calls while we load a new token
       return this.tokenSubject.pipe(
         filter(token => token !== null),
         take(1),
-        switchMap(token => {
-          // Perform the request again now that we got a new token!
+        switchMap(_token => {
+          //Perform the request again now that we got a new token!
           return next.handle(this.addToken(request));
         })
       );

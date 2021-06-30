@@ -23,13 +23,19 @@ export class ShowTrackPage implements OnInit {
   latitude: number;
   longitude: number;
   currentPageTitle = 'Show Track Location';
+  UserId: any;
 
   constructor(private trackingService: TrackingService,
               private route: ActivatedRoute,
+              private router: Router,
               private geolocation: Geolocation
             ) { }
 
   ngOnInit() {
+    this.UserId = Storage.get({ key: 'USER_ID' });
+    if (this.UserId == null) {
+      this.router.navigate(['sign-in']);
+    }
     this.route.paramMap.subscribe(params => {
       this.userid = params.get('userId');
       this.locId = params.get('locId');

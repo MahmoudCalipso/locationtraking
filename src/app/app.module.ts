@@ -29,13 +29,14 @@ import { AuthenticationService } from './services/authentication.service';
 import { AuthGuard } from './guards/auth.guard';
 import { MenuPageModule } from './Views/menu/menu.module';
 import { MenuPage } from './Views/menu/menu.page';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [
-    TrackingPage,
     SignInPage,
+    TrackingPage,
     ShowTrackPage,
     ListTrackingPage,
     MenuPage,
@@ -74,7 +75,7 @@ import { MenuPage } from './Views/menu/menu.page';
     AndroidPermissions,
     Geolocation,
     LocationAccuracy,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+   ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

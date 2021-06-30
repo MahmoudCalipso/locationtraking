@@ -19,7 +19,10 @@ export class AccountPage implements OnInit {
               private userService: UserService ) { }
 
   ngOnInit() {
-    this.UserId = Storage.get({key: 'USER_ID'});
+    this.UserId = Storage.get({ key: 'USER_ID' });
+    if (this.UserId == null) {
+      this.router.navigate(['sign-in']);
+    }
     this.getInformationUser(this.UserId);
   }
   getInformationUser(idUser: number) {

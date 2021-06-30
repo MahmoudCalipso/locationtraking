@@ -6,7 +6,7 @@ import { SignInPage } from './sign-in.page';
 const routes: Routes = [
   {
     path: '',
-    component: SignInPage
+    component: SignInPage,
   }
 ];
 

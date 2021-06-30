@@ -26,7 +26,7 @@ let httpOptions = {
   providedIn: 'root'
 })
 export class AuthenticationService {
-  isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
+  isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   currentAccessToken = null;
   token = '';
   user: any;

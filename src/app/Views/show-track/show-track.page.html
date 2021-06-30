@@ -9,16 +9,15 @@
 
 <ion-content [fullscreen]="true">
     <ion-card>
-      <ion-card-header>Show Dashboard Tracking</ion-card-header>
+      <ion-card-header>Show Tracking</ion-card-header>
       <ion-card-content>
-         <ion-card-title>Show History Tracking</ion-card-title>
          <ion-card-content>
-           <div class="map"  #map id="map">
-
+           <div class="map" #map id="map">
            </div>
            
          </ion-card-content>
       </ion-card-content>
     </ion-card>
+     <ion-button expand="block" fill="outline" color="warning"[routerLink]="['/home']" >Back To Home</ion-button>
    
 </ion-content>

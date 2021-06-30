@@ -12,6 +12,9 @@ import { LocationModule } from 'src/app/modules/location/location.module';
 import { TrackModule } from 'src/app/modules/track/track.module';
 import { catchError, map } from 'rxjs/operators';
 import { Storage } from '@capacitor/storage';
+import { Router } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
+import { UserModule } from 'src/app/modules/user/user.module';
 declare var google;
 
 @Component({
@@ -35,13 +38,17 @@ export class TrackingPage implements OnInit {
   submitform: FormGroup;
   locationid: number;
   carmat: number;
+  user: UserModule;
+  voiture: CarModule;
   constructor(
     private geolocation: Geolocation,
     private androidPermissions: AndroidPermissions,
     private locationAccuracy: LocationAccuracy,
     private trackingService: TrackingService,
     private carService: CarService,
+    private userService : UserService,
     private formBuilder: FormBuilder,
+    private router: Router,
     private toastController: ToastController
 
   ) {
@@ -51,8 +58,14 @@ export class TrackingPage implements OnInit {
   }
 
   ngOnInit() {
+    this.UserId = Storage.get({ key: 'USER_ID' });
+    if (this.UserId == null) {
+      this.router.navigate(['sign-in']);
+    }
     this.createdByUserId = Storage.get({key: 'USER_CREATEDBY'});
-    this.UserId = Storage.get({key: 'USER_ID'});
+    this.UserId = Storage.get({ key: 'USER_ID' });
+    this.getCarById(this.createdByUserId, this.UserId);
+    this.getUser(this.UserId);
     this.checkAppGpsPermission();
     this.getAllCars();
     this.isTracking = false;
@@ -106,7 +119,19 @@ export class TrackingPage implements OnInit {
       error => alert(JSON.stringify(error))
     );
   }
+  getCarById(createdByUserId, carId) {
+    return this.carService.getUserCar(createdByUserId, carId).subscribe(
+      res => {
+        this.voiture = res;
+      });
+  }
 
+  getUser(userId: number) {
+    return this.userService.getUserById(userId).subscribe(
+      res => {
+        this.user = res;
+      });
+  }
   startTracking() {
     if (!this.submitform.valid) {
       const toast =  this.toastController.create({
@@ -144,7 +169,7 @@ export class TrackingPage implements OnInit {
       timeout: 5000,
       maximumAge: 0
     }).then((res) => {
-      this.position.long =  res.coords.longitude;
+      this.position.long = res.coords.longitude;
       this.position.lat = res.coords.latitude;
       this.position.speed = res.coords.speed;
       this.position.timestamp = res.timestamp;
@@ -159,19 +184,19 @@ export class TrackingPage implements OnInit {
       this.map.setCenter(latLng);
       this.map.setZoom(16);
       this.carService.getUserCar(this.UserId, this.location.CarId).
-      pipe(
-        map((car: CarModule) => {
-          this.carmat = car.Matricule;
-          return car;
-        }), catchError(error => {
-          return throwError('Something went wrong!');
-        })
-      );
+        pipe(
+          map((car: CarModule) => {
+            this.carmat = car.Matricule;
+            return car;
+          }), catchError(error => {
+            return throwError('Something went wrong!');
+          })
+        );
       google.maps.Marker({
-        icon : '../../../assets/photo/driver.png',
+        icon: '../../../assets/photo/driver.png',
         position: latLng,
         map: this.map,
-        title: 'Driver Name : *** Car : **** speed : ****',
+        title: `Car ${this.voiture.Matricule} Driver ${this.user.FirstName} ${this.user.LastName} : Speed : ${this.tracking.speed}` ,
       });
     }).catch((err) => {
       alert('Error: ' + err);
