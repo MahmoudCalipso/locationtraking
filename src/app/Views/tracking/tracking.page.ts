@@ -15,6 +15,7 @@ import { Storage } from '@capacitor/storage';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { UserModule } from 'src/app/modules/user/user.module';
+
 declare var google;
 
 @Component({
@@ -145,7 +146,8 @@ export class TrackingPage implements OnInit {
     this.location.StartDate = new Date(Date.parse(Date()));
     this.location.CarId = carid;
     this.location.UserId = parseInt.apply(userid);
-    this.trackingService.saveLocation(this.location).
+    setTimeout(() => {
+      this.trackingService.saveLocation(this.location).
       pipe(
         map((data: LocationModule) => {
           this.locationid = data.LocationId;
@@ -201,6 +203,8 @@ export class TrackingPage implements OnInit {
     }).catch((err) => {
       alert('Error: ' + err);
     });
+   }, 5000);
+    
   }
 
   stopTracking() {
